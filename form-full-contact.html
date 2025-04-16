@@ -373,18 +373,25 @@
             let isValid = true;
 
             fields.forEach(field => {
-                const input = document.getElementById(field.id);
+                const input = field.id === 'contactTime' ? document.querySelector('input[name="contactTime"]') : document.getElementById(field.id);
                 const errorElement = document.getElementById(field.errorId);
-                let value = input.type === 'checkbox' ? input.checked : 
-                           input.type === 'radio' ? document.querySelector(`input[name="${input.name}"]:checked`)?.value : 
-                           input.value.trim();
+                let value = field.id === 'contactTime' ? document.querySelector('input[name="contactTime"]:checked')?.value :
+                           input.type === 'checkbox' ? input.checked : input.value.trim();
 
                 if (!field.validate(value)) {
-                    input.setAttribute('aria-invalid', 'true');
+                    if (field.id === 'contactTime') {
+                        document.querySelectorAll('input[name="contactTime"]').forEach(radio => radio.setAttribute('aria-invalid', 'true'));
+                    } else {
+                        input.setAttribute('aria-invalid', 'true');
+                    }
                     errorElement.classList.add('error-visible');
                     isValid = false;
                 } else {
-                    input.setAttribute('aria-invalid', 'false');
+                    if (field.id === 'contactTime') {
+                        document.querySelectorAll('input[name="contactTime"]').forEach(radio => radio.setAttribute('aria-invalid', 'false'));
+                    } else {
+                        input.setAttribute('aria-invalid', 'false');
+                    }
                     errorElement.classList.remove('error-visible');
                 }
             });
@@ -398,18 +405,18 @@
 
         // Real-time validation on input
         fields.forEach(field => {
-            const input = document.getElementById(field.id);
-            if (input.type === 'radio') {
-                document.querySelectorAll(`input[name="${input.name}"]`).forEach(radio => {
+            if (field.id === 'contactTime') {
+                document.querySelectorAll('input[name="contactTime"]').forEach(radio => {
                     radio.addEventListener('change', function() {
                         const errorElement = document.getElementById(field.errorId);
                         if (field.validate()) {
-                            radio.setAttribute('aria-invalid', 'false');
+                            document.querySelectorAll('input[name="contactTime"]').forEach(r => r.setAttribute('aria-invalid', 'false'));
                             errorElement.classList.remove('error-visible');
                         }
                     });
                 });
             } else {
+                const input = document.getElementById(field.id);
                 input.addEventListener('input', function() {
                     const errorElement = document.getElementById(field.errorId);
                     const value = input.type === 'checkbox' ? input.checked : input.value.trim();
