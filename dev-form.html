@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Form</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; }
+    </style>
+</head>
+<body>
+    <form id="contactForm" method="POST" action="https://script.google.com/macros/s/AKfycbyZqjFUcZW1L2Fxw3KZ9cLOeFy3YLohzpsJ-2xFM8BWPYZPtvkfWBFXB1sHnIxbtvZb/exec">
+        <div class="form-group">
+            <label>name</label>
+            <input type="text" name="name">
+        </div>
+        <div class="form-group">
+            <label>email</label>
+            <input type="text" name="email">
+        </div>
+        <div class="form-group">
+            <label>phone</label>
+            <input type="text" name="phone">
+        </div>
+        <div class="form-group">
+            <label>aux</label>
+            <input type="text" name="aux">
+        </div>
+        
+        <!-- Hidden Fields -->
+        <input type="hidden" name="timestamp" id="timestamp">
+        <input type="hidden" name="ip" id="ip">
+        <input type="hidden" name="verfiID" id="verfiID">
+        
+        <button type="submit">Submit</button>
+    </form>
+
+<!-- Verfi SDK -->
+<script async src="https://dev.verfi.io/sdk/index.js?v=1.0.0&field=verfiID&debug=true"></script>
+
+    <!-- JavaScript for form handling -->
+    <script>
+        // Set timestamp
+        document.getElementById('timestamp').value = new Date().toISOString();
+        
+        // Get IP
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => document.getElementById('ip').value = data.ip)
+            .catch(error => console.log('Error getting IP:', error));
+
+        // Form submission handling
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            // Update timestamp right before submission
+            document.getElementById('timestamp').value = new Date().toISOString();
+        });
+    </script>
+</body>
+</html>
